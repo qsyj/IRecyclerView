@@ -185,9 +185,9 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (!isEmptyView && this.isEmptyView) {
             notifyItemRemoved(getItemCount() - 1);
             this.isEmptyView = isEmptyView;
-        } else {
+        } else if (isEmptyView && !this.isEmptyView){
             this.isEmptyView = isEmptyView;
-            notifyDataSetChanged();
+            notifyItemInserted(getItemCount()-1);
         }
 
         /*if (isEmptyView&&!this.isEmptyView) {
@@ -204,9 +204,9 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int count = isEmptyView() ? 2 : 1;
             notifyItemRemoved(getItemCount() - count);
             this.isLoadMoreFooterView = isLoadMoreFooterView;
-        } else {
+        } else if (isLoadMoreFooterView && !this.isLoadMoreFooterView){
             this.isLoadMoreFooterView = isLoadMoreFooterView;
-            notifyDataSetChanged();
+            notifyItemInserted(getItemCount()-1);
         }
         /*if (isLoadMoreFooterView&&!this.isLoadMoreFooterView) {
             int count = isEmptyView ? 2 : 1;

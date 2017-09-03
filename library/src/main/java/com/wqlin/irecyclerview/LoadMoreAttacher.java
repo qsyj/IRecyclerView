@@ -225,7 +225,10 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
 
                     }
                 } else {
-                    adapter.setIsLoadMoreView(false);
+                    if (iRecyclerView.getLoadMoreFooterView().getLoadMoreStatus() != Status.LOAD_END
+                            && iRecyclerView.getLoadMoreFooterView().getLoadMoreStatus() != Status.LOAD_ING) {
+                        adapter.setIsLoadMoreView(false);
+                    }
                     if (adapter.isEmptyView()) {
                         adapter.setIsEmptyView(false);
                     }
