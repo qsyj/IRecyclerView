@@ -1,0 +1,9 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!--dialog的loading大小-->
+    <dimen name="dp_loading_42">42dp</dimen>
+    <!--刷新的loading大小-->
+    <dimen name="dp_loading_22">26dp</dimen>
+</resources>
