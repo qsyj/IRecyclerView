@@ -58,7 +58,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            WrapperAdapter.this.notifyDataSetChanged();
+//            WrapperAdapter.this.notifyDataSetChanged();
+            WrapperAdapter.this.notifyItemMoved(fromPosition+2,toPosition+2);
         }
     };
 
