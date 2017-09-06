@@ -1,5 +1,7 @@
 package com.wqlin.irecyclerview;
 
+import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,14 +23,39 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final RefreshHeaderLayout mRefreshHeaderContainer;
 
+    /**
+     * 上拉加载的脚部View
+     */
     private final FrameLayout mLoadMoreFooterContainer;
 
     private final LinearLayout mHeaderContainer;
 
     private final LinearLayout mFooterContainer;
 
+    /**
+     * 空View
+     */
+    private  View mEmptyView;
+    /**
+     * 是否添加mEmptyView
+     */
     private boolean isEmptyView;
+    /**
+     * 是否添加mLoadMoreFooterContainer
+     */
     private boolean isLoadMoreFooterView;
+
+    private RecyclerView mRecyclerView;
+
+    /**
+     * 空View的高度
+     */
+    private int emptyViewHeght = -1;
+
+    /**
+     * 移除mLoadMoreFooterContainer  emptyViewHeght时动画
+     */
+    private RemoveItemAnimator mRemoveItemAnimator;
 
     private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -79,6 +106,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
@@ -173,8 +201,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (viewType == LOAD_MORE_FOOTER) {
             return new LoadMoreFooterContainerViewHolder(mLoadMoreFooterContainer);
         } else if (viewType == EMPTY_FOOTER) {
-            View view=new View(parent.getContext());
-            int height=(parent.getHeight() - parent.getPaddingBottom() - parent.getTop())/3;
+            View view=getEmptyView(parent.getContext());
+            int height=getEmptyViewHeght();
             view.setLayoutParams(new ViewGroup.LayoutParams(0, height));
             return new EmptyFooterContainerViewHolder(view);
         } else {
@@ -182,8 +210,49 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    private View getEmptyView(Context context) {
+        if (mEmptyView == null) {
+            mEmptyView = new View(context);
+        }
+        return mEmptyView;
+    }
+
+    /**
+     * 获取EmptyView的高度
+     * @return
+     */
+    private int getEmptyViewHeght() {
+        if (emptyViewHeght < 0) {
+            if (mRecyclerView != null) {
+                emptyViewHeght=(mRecyclerView.getHeight() - mRecyclerView.getPaddingBottom() - mRecyclerView.getTop())/3;
+            }
+        }
+        return emptyViewHeght;
+    }
+
     public void setIsEmptyView(boolean isEmptyView) {
         if (!isEmptyView && this.isEmptyView) {
+            View lastView = mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1);
+            View emptyView=getEmptyView(mRecyclerView.getContext());
+            if (lastView==emptyView) {//可见且最后一个
+                int emptyBottom=emptyView.getBottom();
+                int rvBottom = mRecyclerView.getBottom() - mRecyclerView.getPaddingBottom();
+                int scrollHeight = getEmptyViewHeght() + rvBottom - emptyBottom;
+                if (scrollHeight > 0) {
+                    final RecyclerView.ItemAnimator oldItemAnimator = mRecyclerView.getItemAnimator();
+                    long removeDuration=getRemoveDuration(scrollHeight);
+                    getItemAnimator().setMoveDuration(removeDuration);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRecyclerView != null) {
+                                mRecyclerView.setItemAnimator(oldItemAnimator);
+                            }
+                        }
+                    }, removeDuration + 50);
+                }
+            }
+
             notifyItemRemoved(getItemCount() - 1);
             this.isEmptyView = isEmptyView;
         } else if (isEmptyView && !this.isEmptyView){
@@ -200,9 +269,51 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.isEmptyView = isEmptyView;*/
 
     }
+
+
+
+    private RemoveItemAnimator getItemAnimator() {
+        if (mRemoveItemAnimator == null) {
+            mRemoveItemAnimator = new RemoveItemAnimator();
+        }
+        return mRemoveItemAnimator;
+    }
+
+    /**
+     * 动画时间
+     * @param scrollHeight
+     * @return
+     */
+    private long getRemoveDuration(int scrollHeight) {
+        long emptyviewheght=getEmptyViewHeght();
+        long duration = (250L * scrollHeight) / emptyviewheght;
+        duration = duration > 250 ? 250 : duration;
+        duration = duration < 50 ? 50 : duration;
+        return duration;
+    }
+
     public void setIsLoadMoreView(boolean isLoadMoreFooterView) {
         if (!isLoadMoreFooterView && this.isLoadMoreFooterView) {
             int count = isEmptyView() ? 2 : 1;
+            View lastView = mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1);
+            if (lastView==mLoadMoreFooterContainer) {//可见且最后一个
+                int footerBottom=mLoadMoreFooterContainer.getBottom();
+                int rvBottom = mRecyclerView.getBottom() - mRecyclerView.getPaddingBottom();
+                int scrollHeight = mLoadMoreFooterContainer.getMeasuredHeight() + rvBottom - footerBottom;
+                if (scrollHeight > 0) {
+                    final RecyclerView.ItemAnimator oldItemAnimator = mRecyclerView.getItemAnimator();
+                    long removeDuration=getRemoveDuration(scrollHeight);
+                    getItemAnimator().setMoveDuration(removeDuration);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRecyclerView != null) {
+                                mRecyclerView.setItemAnimator(oldItemAnimator);
+                            }
+                        }
+                    }, removeDuration + 50);
+                }
+            }
             notifyItemRemoved(getItemCount() - count);
             this.isLoadMoreFooterView = isLoadMoreFooterView;
         } else if (isLoadMoreFooterView && !this.isLoadMoreFooterView){

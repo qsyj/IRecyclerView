@@ -278,7 +278,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
                         public void run() {
                             adapter.setIsLoadMoreView(false);
                         }
-                    }, 1000);
+                    }, 500);
                 }
             }
 
