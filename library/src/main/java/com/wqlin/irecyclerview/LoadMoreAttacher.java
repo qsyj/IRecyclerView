@@ -50,6 +50,13 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
     }
 
     @Override
+    public int getIAdapterCount() {
+        RecyclerView.Adapter adapter = iRecyclerView.getIAdapter();
+        if (adapter==null)
+            return 0;
+        return iRecyclerView.getIAdapter().getItemCount();
+    }
+    @Override
     public boolean isFling() {
         return isFling;
     }

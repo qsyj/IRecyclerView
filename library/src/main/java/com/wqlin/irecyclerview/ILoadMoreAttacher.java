@@ -5,7 +5,11 @@ package com.wqlin.irecyclerview;
  */
 
 public interface ILoadMoreAttacher {
-
+    /**
+     * 获取IRecyclerView的Itemg个数(不包括头部 脚部)
+     * @return
+     */
+    int getIAdapterCount();
     /**
      * 是否快速滑动
      * @return

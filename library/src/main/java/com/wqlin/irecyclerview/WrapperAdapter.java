@@ -60,11 +60,11 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * 动画最大时间
      */
-    private final long DURATION_MAX = 700;
+    private final long DURATION_MAX = 500;
     /**
      * 一像素动画时间
      */
-    private final long DURATION_UNIT = 1;
+    private final double DURATION_UNIT = 7;
 
     private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -290,11 +290,11 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     /**
      * 动画时间
-     * @param scrollHeight
+     * @param scrollHeight 像素
      * @return
      */
     private long getRemoveDuration(int scrollHeight) {
-        long duration = scrollHeight*DURATION_UNIT;
+        long duration = (long) (scrollHeight*DURATION_UNIT);
         duration = duration > DURATION_MAX ? DURATION_MAX : duration;
         return duration;
     }
