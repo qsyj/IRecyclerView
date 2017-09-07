@@ -57,6 +57,15 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private RemoveItemAnimator mRemoveItemAnimator;
 
+    /**
+     * 动画最大时间
+     */
+    private final long DURATION_MAX = 700;
+    /**
+     * 一像素动画时间
+     */
+    private final long DURATION_UNIT = 1;
+
     private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -285,10 +294,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * @return
      */
     private long getRemoveDuration(int scrollHeight) {
-        long emptyviewheght=getEmptyViewHeght();
-        long duration = (250L * scrollHeight) / emptyviewheght;
-        duration = duration > 250 ? 250 : duration;
-        duration = duration < 50 ? 50 : duration;
+        long duration = scrollHeight*DURATION_UNIT;
+        duration = duration > DURATION_MAX ? DURATION_MAX : duration;
         return duration;
     }
 
