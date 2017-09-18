@@ -365,9 +365,11 @@ public class IRecyclerView extends RecyclerView {
 /*============================================================上拉加载s======================================================================*/
                 mLoadMoreAttacher.setFling(false);
                 mLoadMoreAttacher.resetLoadMoreFooterViewStatus();
-                mLoadMoreAttacher.setFull();
-                if (mLoadMoreAttacher.isFull()) {
-                    mLoadMoreAttacher.addLoadMoreFooter();
+                if (mStatus!=STATUS_REFRESHING&&mLoadMoreAttacher.getIAdapterCount() > 0) {//头部正在刷新不添加LoadMoreFooterView 并且item count(不包括头部脚部)必须大于0
+                    mLoadMoreAttacher.setFull();
+                    if (mLoadMoreAttacher.isFull()) {
+                        mLoadMoreAttacher.addLoadMoreFooter();
+                    }
                 }
 /*============================================================上拉加载e======================================================================*/
 
