@@ -2,15 +2,14 @@ package com.wqlin.irecyclerview.demo.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.IRecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import android.support.v7.widget.IRecyclerView;
 import com.wqlin.irecyclerview.OnLoadMoreListener;
 import com.wqlin.irecyclerview.OnRefreshListener;
 import com.wqlin.irecyclerview.demo.R;
@@ -46,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         iRecyclerView.setLoadMoreEnabled(true);
         iRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        bannerView = (BannerView) LayoutInflater.from(this).inflate(R.layout.layout_banner_view, iRecyclerView.getHeaderContainer(), false);
-        iRecyclerView.addHeaderView(bannerView);
+        /*bannerView = (BannerView) LayoutInflater.from(this).inflate(R.layout.layout_banner_view, iRecyclerView.getHeaderContainer(), false);
+        iRecyclerView.addHeaderView(bannerView);*/
         iRecyclerView.setRefreshHeaderView(new BatVsSupperHeaderView(this));
         iRecyclerView.setLoadMoreFooterView(new LoadMoreFooterView(this));
 

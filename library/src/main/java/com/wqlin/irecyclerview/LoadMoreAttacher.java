@@ -82,7 +82,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
             return;
 
         View lastView = iRecyclerView.getChildAt(iRecyclerView.getChildCount()-1);
-        if (lastView.getBottom()<iRecyclerView.getBottom()-iRecyclerView.getPaddingBottom()) {
+        if (lastView.getBottom()<iRecyclerView.getHeight()-iRecyclerView.getPaddingBottom()) {
             isFull = false;
         }
         isFull = true;
@@ -117,7 +117,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
                         int position = iRecyclerView.getChildLayoutPosition(loadMoreView);
                         if (position >= 0) {//可见
                             int lastBottom=loadMoreView.getBottom();
-                            int recyclerBottom =  iRecyclerView.getBottom()-iRecyclerView.getPaddingBottom();
+                            int recyclerBottom =  iRecyclerView.getHeight()-iRecyclerView.getPaddingBottom();
                             if (lastBottom > recyclerBottom) {
                                 setStatusLoadMore(Status.LOAD_RESET);
                             }
@@ -144,7 +144,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
                     if (getStatusLoadMore() == Status.LOAD_RESET&&isDragLoadMore && adapter.isEmptyView()) {//松手加载
                         View loadMoreView = adapter.getLoadMoreFooterContainer();
                         int lastBottom=loadMoreView.getBottom();
-                        int recyclerBottom =  iRecyclerView.getBottom()-iRecyclerView.getPaddingBottom();
+                        int recyclerBottom =  iRecyclerView.getHeight()-iRecyclerView.getPaddingBottom();
 //                        Log.e(TAG, "松手加载 lastBottom:" + lastBottom + ",recyclerBottom:" + recyclerBottom);
                         if (lastBottom <= recyclerBottom) {
                             setStatusLoadMore(Status.LOAD_RELEASE_TO_REFRESH);
@@ -217,7 +217,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
                 int position = iRecyclerView.getChildLayoutPosition(loadMoreView);
                 if (position >= 0) {//可见
                     int lastBottom = loadMoreView.getBottom();
-                    int recyclerBottom = iRecyclerView.getBottom() - iRecyclerView.getPaddingBottom();
+                    int recyclerBottom = iRecyclerView.getHeight() - iRecyclerView.getPaddingBottom();
                     if (adapter.isEmptyView()) {
                         adapter.setIsEmptyView(false);
 //                            onLoadMore(recyclerView);
@@ -304,7 +304,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
             int position = iRecyclerView.getChildLayoutPosition(loadMoreView);
             if (position >= 0) {//可见
                 int loadMoreViewBottom = loadMoreView.getBottom();
-                int recyclerBottom =  iRecyclerView.getBottom()-iRecyclerView.getPaddingBottom();
+                int recyclerBottom =  iRecyclerView.getHeight()-iRecyclerView.getPaddingBottom();
                 if (loadMoreViewBottom<=recyclerBottom) {
                     if (loadMoreViewBottom < recyclerBottom) {
                         if (adapter.isEmptyView()) {
