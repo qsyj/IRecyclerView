@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.wqlin.irecyclerview.ALoadMoreFooterLayout;
+import com.wqlin.irecyclerview.ARefreshHeaderLayout;
 import com.wqlin.irecyclerview.ILoadMoreAttacher;
 import com.wqlin.irecyclerview.LoadMoreAttacher;
 import com.wqlin.irecyclerview.OnLoadMoreListener;
@@ -149,7 +150,7 @@ public class IRecyclerView extends RecyclerView {
 /*============================================================上拉加载s======================================================================*/
         boolean fling=super.fling(velocityX, velocityY);
         mLoadMoreAttacher.setFling(fling);
-        Log.e(IRecyclerView.TAG, "fling:" + fling);
+//        Log.e(IRecyclerView.TAG, "fling:" + fling);
 /*============================================================上拉加载e======================================================================*/
         return fling;
     }
@@ -195,11 +196,7 @@ public class IRecyclerView extends RecyclerView {
         this.mRefreshFinalMoveOffset = refreshFinalMoveOffset;
     }
 
-    public void setRefreshHeaderView(View refreshHeaderView) {
-        if (!(refreshHeaderView instanceof RefreshTrigger)) {
-            throw new ClassCastException("Refresh header view must be an implement of RefreshTrigger");
-        }
-
+    public void setRefreshHeaderView(ARefreshHeaderLayout refreshHeaderView) {
         if (mRefreshHeaderView != null) {
             removeRefreshHeaderView();
         }
@@ -207,14 +204,6 @@ public class IRecyclerView extends RecyclerView {
             this.mRefreshHeaderView = refreshHeaderView;
             ensureRefreshHeaderContainer();
             mRefreshHeaderContainer.addView(refreshHeaderView);
-        }
-    }
-
-    public void setRefreshHeaderView(@LayoutRes int refreshHeaderLayoutRes) {
-        ensureRefreshHeaderContainer();
-        final View refreshHeader = LayoutInflater.from(getContext()).inflate(refreshHeaderLayoutRes, mRefreshHeaderContainer, false);
-        if (refreshHeader != null) {
-            setRefreshHeaderView(refreshHeader);
         }
     }
 
@@ -395,7 +384,7 @@ public class IRecyclerView extends RecyclerView {
 /*============================================================上拉加载s======================================================================*/
                 mLoadMoreAttacher.removeLoadMoreFooter();
 /*============================================================上拉加载e======================================================================*/
-            break;
+                break;
 
         }
 
@@ -418,7 +407,7 @@ public class IRecyclerView extends RecyclerView {
             case MotionEvent.ACTION_MOVE: {
                 final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
                 if (index < 0) {
-                    Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
+//                    Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
                     return false;
                 }
 
@@ -483,7 +472,7 @@ public class IRecyclerView extends RecyclerView {
 
             case MotionEvent.ACTION_UP: {
 /*============================================================上拉加载s======================================================================*/
-                Log.e(IRecyclerView.TAG, "ACTION_POINTER_UP Status:" + mLoadMoreAttacher.getStatusLoadMore());
+//                Log.e(IRecyclerView.TAG, "ACTION_POINTER_UP Status:" + mLoadMoreAttacher.getStatusLoadMore());
                 mLoadMoreAttacher.setDragLoadMore(false);
                 mLoadMoreAttacher.removeLoadMoreFooter();
 /*============================================================上拉加载e======================================================================*/
@@ -606,11 +595,14 @@ public class IRecyclerView extends RecyclerView {
         startScrollAnimation(400, new DecelerateInterpolator(), currentHeight, targetHeight);
     }
 
-/*============================================================上拉加载s======================================================================*/
+    /*============================================================上拉加载s======================================================================*/
     public void setLoadMoreComplete(boolean isLoadMoreComplete) {
         mLoadMoreAttacher.setLoadMoreComplete(isLoadMoreComplete);
     }
 
+    public void setLoadMoreStatusNull() {
+        mLoadMoreAttacher.setLoadMoreNull();
+    }
     public void setLoadMoreEnd() {
         mLoadMoreAttacher.setLoadMoreEnd();
     }

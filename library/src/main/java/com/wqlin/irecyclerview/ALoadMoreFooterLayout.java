@@ -66,7 +66,7 @@ public abstract class ALoadMoreFooterLayout extends FrameLayout implements IFoot
                 onEnd();
                 break;
             case LOAD_NULL:
-
+                onNull();
                 break;
         }
     }

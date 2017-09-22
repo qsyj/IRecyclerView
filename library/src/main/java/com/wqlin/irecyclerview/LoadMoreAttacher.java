@@ -2,7 +2,6 @@ package com.wqlin.irecyclerview;
 
 import android.support.v7.widget.IRecyclerView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -90,7 +89,7 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
 
     @Override
     public boolean isDragLoadMore() {
-        Log.e(TAG, "isDragLoadMore() isDragLoadMore:" + isDragLoadMore);
+//        Log.e(TAG, "isDragLoadMore() isDragLoadMore:" + isDragLoadMore);
         return isDragLoadMore;
     }
 
@@ -258,6 +257,14 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
                 }
             }, 250);
         }
+    }
+
+    @Override
+    public void setLoadMoreNull() {
+        if (!loadMoreEnabled)
+            return;
+        setStatusLoadMore(Status.LOAD_NULL);
+
     }
 
     @Override

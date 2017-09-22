@@ -102,6 +102,11 @@ public interface ILoadMoreAttacher {
     void setLoadMoreComplete(boolean isLoadMoreComplete);
 
     /**
+     * 没有任何状态
+     */
+    void setLoadMoreNull();
+
+    /**
      * 加载结束  没有更多数据
      */
     void setLoadMoreEnd();
