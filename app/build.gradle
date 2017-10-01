@@ -17,11 +17,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    //这个没写的话在执行gradlew bintrayupload时也会提示加上
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':library')
+    compile project(':irecyclerview')
     //    compile 'com.github.Aspsine:IRecyclerView:0.0.3'
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.google.code.gson:gson:2.6.2'
