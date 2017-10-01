@@ -6,16 +6,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wqlin.irecyclerview.ARefreshHeaderLayout;
 import com.wqlin.irecyclerview.RefreshTrigger;
 import com.wqlin.irecyclerview.demo.R;
 
 /**
  * Created by aspsine on 16/3/14.
  */
-public class ClassicRefreshHeaderView extends RelativeLayout implements RefreshTrigger {
+public class ClassicRefreshHeaderView extends ARefreshHeaderLayout implements RefreshTrigger {
     private ImageView ivArrow;
 
     private ImageView ivSuccess;

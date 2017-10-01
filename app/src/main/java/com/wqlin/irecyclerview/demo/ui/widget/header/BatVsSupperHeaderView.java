@@ -3,16 +3,16 @@ package com.wqlin.irecyclerview.demo.ui.widget.header;
 import android.animation.Animator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.wqlin.irecyclerview.ARefreshHeaderLayout;
 import com.wqlin.irecyclerview.RefreshTrigger;
 import com.wqlin.irecyclerview.demo.R;
 
 /**
  * Created by aspsine on 16/4/7.
  */
-public class BatVsSupperHeaderView extends FrameLayout implements RefreshTrigger {
+public class BatVsSupperHeaderView extends ARefreshHeaderLayout implements RefreshTrigger {
 
     private ImageView ivBatMan;
 

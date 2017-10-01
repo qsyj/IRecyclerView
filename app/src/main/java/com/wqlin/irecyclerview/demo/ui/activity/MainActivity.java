@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.IRecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         iRecyclerView.setLoadMoreEnabled(true);
         iRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        /*bannerView = (BannerView) LayoutInflater.from(this).inflate(R.layout.layout_banner_view, iRecyclerView.getHeaderContainer(), false);
-        iRecyclerView.addHeaderView(bannerView);*/
+        bannerView = (BannerView) LayoutInflater.from(this).inflate(R.layout.layout_banner_view, iRecyclerView.getHeaderContainer(), false);
+        iRecyclerView.addHeaderView(bannerView);
         iRecyclerView.setRefreshHeaderView(new BatVsSupperHeaderView(this));
         iRecyclerView.setLoadMoreFooterView(new LoadMoreFooterView(this));
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_toggle_header) {
-            toggleRefreshHeader();
+//            toggleRefreshHeader();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             Toast.makeText(this, "Classic style", Toast.LENGTH_SHORT).show();
         } else if (iRecyclerView.getRefreshHeaderView() instanceof ClassicRefreshHeaderView) {
             // we can also set layout
-            iRecyclerView.setRefreshHeaderView(R.layout.layout_irecyclerview_refresh_header);
+//            iRecyclerView.setRefreshHeaderView(R.layout.layout_irecyclerview_refresh_header);
             Toast.makeText(this, "Bat man vs Super man style", Toast.LENGTH_SHORT).show();
         }
     }
