@@ -271,7 +271,9 @@ public class LoadMoreAttacher implements ILoadMoreAttacher{
     public void setLoadMoreEnd() {
         if (!loadMoreEnabled)
             return;
-
+        if (getIAdapterCount() > 0) {
+            addLoadMoreFooter();
+        }
         setStatusLoadMore(Status.LOAD_END);
     }
 

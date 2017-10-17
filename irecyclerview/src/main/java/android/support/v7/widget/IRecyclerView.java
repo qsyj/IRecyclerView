@@ -54,7 +54,15 @@ public class IRecyclerView extends RecyclerView {
     private boolean mRefreshEnabled;
 
     private boolean mLoadMoreEnabled;
-
+    /**
+     * 当父类是NestedScrollingParent时,当滑动到边缘时是否显示Glow(当执行scrollByInternal() <p>
+     * -->dispatchNestedScroll()-->parent onNestedScroll()后int[] offsetInWindow的值未改变并且View大小未改变,则重写dispatchNestedScroll()返回false)
+     */
+    private boolean showOverScrollWhenScrollingParent = false;
+    /**
+     * 执行{@link #dispatchNestedScroll(int, int, int, int, int[])}时回调 mDispatchNestedScrollListener
+     */
+    private DispatchNestedScrollListener mDispatchNestedScrollListener;
     private int mRefreshFinalMoveOffset;
 
     private OnRefreshListener mOnRefreshListener;
@@ -389,6 +397,50 @@ public class IRecyclerView extends RecyclerView {
         }
 
         return super.onInterceptTouchEvent(e);
+    }
+
+    /**
+     * 当父类是NestedScrollingParent时,当滑动到边缘时是否显示Glow<p>
+     * (当执行scrollByInternal() -->dispatchNestedScroll()-->parent onNestedScroll()后int[] offsetInWindow的值未改变并且View大小未改变,则重写dispatchNestedScroll()返回false) <p>
+     *  若需要自定义条件判断则使用   @link {@link #setDispatchNestedScrollListener(DispatchNestedScrollListener)}}
+     *
+     * @param showOverScrollWhenScrollingParent
+     */
+    public void showGlowWhenScrollingParent(boolean showOverScrollWhenScrollingParent) {
+        this.showOverScrollWhenScrollingParent = showOverScrollWhenScrollingParent;
+    }
+
+    /**
+     * 执行{@link #dispatchNestedScroll(int, int, int, int, int[])}时回调 进行拦截
+     */
+    public void setDispatchNestedScrollListener(DispatchNestedScrollListener dispatchNestedScrollListener) {
+        mDispatchNestedScrollListener = dispatchNestedScrollListener;
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        if (mDispatchNestedScrollListener != null) {
+            mDispatchNestedScrollListener.dispatchNestedScrollPre(this,dxConsumed,dyConsumed,dxUnconsumed,dyUnconsumed,offsetInWindow);
+        }
+        int[] oldOffsetInWindow = new int[2];
+        oldOffsetInWindow[0] = offsetInWindow[0];
+        oldOffsetInWindow[1] = offsetInWindow[1];
+        int oldWidth = getWidth();
+        int oldHeight = getHeight();
+        boolean dispatchNestedScroll = super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+        if (mDispatchNestedScrollListener != null) {
+            return mDispatchNestedScrollListener.dispatchNestedScroll(this, dispatchNestedScroll, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+        } else {
+            if (dispatchNestedScroll) {
+                if (oldOffsetInWindow[0] == offsetInWindow[0] &&
+                        oldOffsetInWindow[1] == offsetInWindow[1] &&
+                        oldWidth==getWidth()&&
+                        oldHeight==getHeight()) {
+                    return false;
+                }
+            }
+            return dispatchNestedScroll;
+        }
     }
 
     @Override
@@ -793,5 +845,17 @@ public class IRecyclerView extends RecyclerView {
         }
         return statusLog;
     }
+    public interface DispatchNestedScrollListener {
 
+        /**
+         * RecyclerView dispatchNestedScroll()之前
+         */
+        void dispatchNestedScrollPre(RecyclerView recyclerView,int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow);
+
+        /**
+         * RecyclerView dispatchNestedScroll()之后没有return; 该方法将改变boolean dispatchNestedScroll的值
+         *
+         */
+        boolean dispatchNestedScroll(RecyclerView recyclerView,boolean dispatchNestedScroll,int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow);
+    }
 }
