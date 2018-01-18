@@ -411,7 +411,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (1 < position && position < mAdapter.getItemCount() + 2) {
-            mAdapter.onBindViewHolder(holder, position - 2);
+            mAdapter.onBindViewHolder(holder, position - 2,null);
         }
     }
 

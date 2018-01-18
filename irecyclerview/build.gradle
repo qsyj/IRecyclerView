@@ -30,7 +30,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.0.2'
 }
 
-version = "0.5.1"	//aar的版本号
+version = "0.5.2"	//aar的版本号
 ext {
 //    artifact = 'irecyclerview'
 //    bintrayRepo = 'maven'
