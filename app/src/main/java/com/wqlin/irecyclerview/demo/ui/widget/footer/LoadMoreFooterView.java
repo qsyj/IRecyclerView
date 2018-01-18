@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.wqlin.irecyclerview.ALoadMoreFooterLayout;
 import com.wqlin.irecyclerview.demo.R;
+import com.wqlin.widget.irecyclerview.ALoadMoreFooterLayout;
 
 /**
  * Created by aspsine on 16/3/14.

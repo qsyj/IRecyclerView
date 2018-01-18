@@ -1,4 +1,4 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;
@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
  * @email wangql@leleyuntech.com
  * @date 2017/9/21 9:19
  */
-public abstract class ARefreshHeaderLayout extends FrameLayout implements  RefreshTrigger{
+public abstract class ARefreshHeaderLayout extends FrameLayout implements RefreshTrigger {
     public ARefreshHeaderLayout(@NonNull Context context) {
         super(context);
     }

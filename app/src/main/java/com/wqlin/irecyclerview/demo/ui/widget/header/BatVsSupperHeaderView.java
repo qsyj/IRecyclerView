@@ -5,9 +5,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.wqlin.irecyclerview.ARefreshHeaderLayout;
-import com.wqlin.irecyclerview.RefreshTrigger;
 import com.wqlin.irecyclerview.demo.R;
+import com.wqlin.widget.irecyclerview.ARefreshHeaderLayout;
+import com.wqlin.widget.irecyclerview.RefreshTrigger;
 
 /**
  * Created by aspsine on 16/4/7.

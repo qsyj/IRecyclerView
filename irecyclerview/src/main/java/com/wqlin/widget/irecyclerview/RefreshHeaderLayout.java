@@ -1,4 +1,4 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.content.Context;
 import android.util.AttributeSet;

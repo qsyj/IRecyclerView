@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.wqlin.irecyclerview.OnLoadMoreListener;
-import com.wqlin.irecyclerview.OnRefreshListener;
 import com.wqlin.irecyclerview.demo.R;
 import com.wqlin.irecyclerview.demo.model.Image;
 import com.wqlin.irecyclerview.demo.network.NetworkAPI;
@@ -24,6 +22,8 @@ import com.wqlin.irecyclerview.demo.ui.widget.header.BatVsSupperHeaderView;
 import com.wqlin.irecyclerview.demo.ui.widget.header.ClassicRefreshHeaderView;
 import com.wqlin.irecyclerview.demo.utils.DensityUtils;
 import com.wqlin.irecyclerview.demo.utils.ListUtils;
+import com.wqlin.widget.irecyclerview.OnLoadMoreListener;
+import com.wqlin.widget.irecyclerview.OnRefreshListener;
 
 import java.util.List;
 
@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 iRecyclerView.setRefreshing(true);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        iRecyclerView.destory();
     }
 
     @Override

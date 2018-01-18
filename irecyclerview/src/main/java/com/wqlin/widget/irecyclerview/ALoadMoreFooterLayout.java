@@ -1,4 +1,4 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;
@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
  */
 
 public abstract class ALoadMoreFooterLayout extends FrameLayout implements IFooter{
-    private Status mStatus=Status.LOAD_NULL;
+    private Status mStatus= Status.LOAD_NULL;
 
     public ALoadMoreFooterLayout(@NonNull Context context) {
         super(context);
@@ -33,7 +33,7 @@ public abstract class ALoadMoreFooterLayout extends FrameLayout implements IFoot
             onStateChanged();
         }
     }
-    public  Status getLoadMoreStatus(){
+    public Status getLoadMoreStatus(){
         return mStatus;
     }
 

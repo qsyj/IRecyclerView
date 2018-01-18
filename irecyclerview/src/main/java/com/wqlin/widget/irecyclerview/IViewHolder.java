@@ -1,4 +1,4 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

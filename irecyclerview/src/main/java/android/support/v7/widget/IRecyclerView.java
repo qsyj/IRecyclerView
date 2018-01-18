@@ -15,23 +15,27 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.wqlin.irecyclerview.ALoadMoreFooterLayout;
-import com.wqlin.irecyclerview.ARefreshHeaderLayout;
-import com.wqlin.irecyclerview.ILoadMoreAttacher;
-import com.wqlin.irecyclerview.LoadMoreAttacher;
-import com.wqlin.irecyclerview.OnLoadMoreListener;
-import com.wqlin.irecyclerview.OnLoadMoreScrollListener;
-import com.wqlin.irecyclerview.OnRefreshListener;
-import com.wqlin.irecyclerview.RefreshHeaderLayout;
-import com.wqlin.irecyclerview.RefreshTrigger;
-import com.wqlin.irecyclerview.SimpleAnimatorListener;
-import com.wqlin.irecyclerview.WrapperAdapter;
+import com.wqlin.widget.irecyclerview.ALoadMoreFooterLayout;
+import com.wqlin.widget.irecyclerview.ARefreshHeaderLayout;
+import com.wqlin.widget.irecyclerview.ILoadMoreAttacher;
+import com.wqlin.widget.irecyclerview.LoadMoreAttacher;
+import com.wqlin.widget.irecyclerview.OnLoadMoreListener;
+import com.wqlin.widget.irecyclerview.OnLoadMoreScrollListener;
+import com.wqlin.widget.irecyclerview.OnRefreshListener;
+import com.wqlin.widget.irecyclerview.RefreshHeaderLayout;
+import com.wqlin.widget.irecyclerview.RefreshTrigger;
+import com.wqlin.widget.irecyclerview.SimpleAnimatorListener;
+import com.wqlin.widget.irecyclerview.WrapperAdapter;
+
 
 /**
  * 请不要使用getAdapter(), 使用getIAdapter()
+ * <p>
+ * 注意销毁调用{@link #destory()}
  * Created by aspsine on 16/3/3.
  */
 public class IRecyclerView extends RecyclerView {
@@ -122,6 +126,10 @@ public class IRecyclerView extends RecyclerView {
 
     @Override
     boolean scrollByInternal(int x, int y, MotionEvent ev) {
+        if (mLoadMoreAttacher != null) {
+            if (mLoadMoreAttacher.isAnim())
+                return false;
+        }
 
 /*============================================================上拉加载s 阻尼效果======================================================================*/
         if (mLoadMoreAttacher.isDragLoadMore()) {
@@ -131,6 +139,13 @@ public class IRecyclerView extends RecyclerView {
 /*============================================================上拉加载s======================================================================*/
 
         return super.scrollByInternal(x, y, ev);
+    }
+
+    public void destory() {
+        if (mLoadMoreAttacher != null) {
+            mLoadMoreAttacher.destory();
+            mLoadMoreAttacher = null;
+        }
     }
 
     private void setLoadMoreAttacher() {
@@ -193,7 +208,7 @@ public class IRecyclerView extends RecyclerView {
 
     public void setRefreshComplete() {
         setRefreshing(false);
-        mLoadMoreAttacher.pullRefreshComplete();
+        mLoadMoreAttacher.setLoadMoreReset();
     }
 
     public void setRefreshError() {
@@ -652,6 +667,9 @@ public class IRecyclerView extends RecyclerView {
         mLoadMoreAttacher.setLoadMoreComplete(isLoadMoreComplete);
     }
 
+    public void setLoadMoreReset() {
+        mLoadMoreAttacher.setLoadMoreReset();
+    }
     public void setLoadMoreStatusNull() {
         mLoadMoreAttacher.setLoadMoreNull();
     }

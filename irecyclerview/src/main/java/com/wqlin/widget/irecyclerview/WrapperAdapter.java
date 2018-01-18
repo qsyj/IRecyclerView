@@ -1,7 +1,8 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -36,7 +37,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * 空View
      */
-    private  View mEmptyView;
+    private View mEmptyView;
     /**
      * 是否添加mEmptyView
      */
@@ -61,11 +62,28 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * 动画最大时间
      */
-    private final long DURATION_MAX = 500;
+    public static final long DURATION_MAX = 500;
     /**
      * 一像素动画时间
      */
     private final double DURATION_UNIT = 7;
+
+    /**
+     * mHandler处理类型 移除动画
+     */
+    private final int WHAT_REMOVE_ANIM = 1;
+
+    /**
+     * mHandler处理类型 恢复默认动画
+     */
+    private final int WHAT_RESET_ITEM_ANIM = 2;
+
+    /**
+     * 正在移除动画
+     */
+    private boolean isRemoveAnim;
+    private Handler mHandler;
+
 
     private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -116,7 +134,6 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
-        /*解决RecyclerView的Called attach on a child which is not detached异常*/
         RecyclerView.ItemAnimator itemAnimator = recyclerView.getItemAnimator();
         if (itemAnimator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) itemAnimator).setSupportsChangeAnimations(false);
@@ -226,7 +243,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private View getEmptyView(Context context) {
+    public View getEmptyView(Context context) {
         if (mEmptyView == null) {
             mEmptyView = new View(context);
         }
@@ -246,8 +263,56 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return emptyViewHeght;
     }
 
+    private Handler getHandler() {
+        if (mHandler == null) {
+            mHandler=new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    int what = msg.what;
+                    switch (what) {
+                        case WHAT_REMOVE_ANIM:
+                            isRemoveAnim = false;
+                            return true;
+                        case WHAT_RESET_ITEM_ANIM:
+                            if (mRecyclerView != null) {
+                                mRecyclerView.setItemAnimator((RecyclerView.ItemAnimator) msg.obj);
+                            }
+                            return true;
+                    }
+                    return false;
+                }
+            });
+        }
+        return mHandler;
+    }
+    private void handlRemoveAnimTime(long durationRemoveAnim) {
+        isRemoveAnim = true;
+        getHandler().removeMessages(WHAT_REMOVE_ANIM);
+        getHandler().sendEmptyMessageDelayed(WHAT_REMOVE_ANIM, durationRemoveAnim + 50);
+
+    }
+
+    private void resetItemAnim(long durationRemoveAnim,final RecyclerView.ItemAnimator itemAnimator) {
+        Message msg = new Message();
+        msg.what = WHAT_RESET_ITEM_ANIM;
+        msg.obj = itemAnimator;
+        mHandler.sendMessageDelayed(msg, durationRemoveAnim + 50);
+    }
+
+    public boolean isRemoveAnim() {
+        return isRemoveAnim;
+    }
+
+    public void destory() {
+        if (mHandler != null) {
+            mHandler.removeMessages(WHAT_REMOVE_ANIM);
+            mHandler.removeMessages(WHAT_RESET_ITEM_ANIM);
+            mHandler = null;
+        }
+    }
+
     public void setIsEmptyView(boolean isEmptyView) {
-        if (!isEmptyView && this.isEmptyView) {
+        if (!isEmptyView && this.isEmptyView) {//mEmptyView.getParent()!=null
             View lastView = mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1);
             View emptyView=getEmptyView(mRecyclerView.getContext());
             if (lastView==emptyView) {//可见且最后一个
@@ -258,17 +323,10 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     final RecyclerView.ItemAnimator oldItemAnimator = mRecyclerView.getItemAnimator();
                     long removeDuration=getRemoveDuration(scrollHeight);
                     getItemAnimator().setMoveDuration(removeDuration);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRecyclerView != null) {
-                                mRecyclerView.setItemAnimator(oldItemAnimator);
-                            }
-                        }
-                    }, removeDuration + 50);
+                    handlRemoveAnimTime(removeDuration);
+                    resetItemAnim(removeDuration,oldItemAnimator);
                 }
             }
-
             notifyItemRemoved(getItemCount() - 1);
             this.isEmptyView = isEmptyView;
         } else if (isEmptyView && !this.isEmptyView){
@@ -307,7 +365,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void setIsLoadMoreView(boolean isLoadMoreFooterView) {
-        if (!isLoadMoreFooterView && this.isLoadMoreFooterView) {
+        if (!isLoadMoreFooterView && this.isLoadMoreFooterView) {//mLoadMoreFooterContainer.getParent()!=null
             int count = isEmptyView() ? 2 : 1;
             View lastView = mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1);
             if (lastView==mLoadMoreFooterContainer) {//可见且最后一个
@@ -318,14 +376,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     final RecyclerView.ItemAnimator oldItemAnimator = mRecyclerView.getItemAnimator();
                     long removeDuration=getRemoveDuration(scrollHeight);
                     getItemAnimator().setMoveDuration(removeDuration);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRecyclerView != null) {
-                                mRecyclerView.setItemAnimator(oldItemAnimator);
-                            }
-                        }
-                    }, removeDuration + 50);
+                    handlRemoveAnimTime(removeDuration);
+                    resetItemAnim(removeDuration,oldItemAnimator);
                 }
             }
             notifyItemRemoved(getItemCount() - count);
@@ -359,7 +411,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (1 < position && position < mAdapter.getItemCount() + 2) {
-            mAdapter.onBindViewHolder(holder, position - 2,null);
+            mAdapter.onBindViewHolder(holder, position - 2);
         }
     }
 

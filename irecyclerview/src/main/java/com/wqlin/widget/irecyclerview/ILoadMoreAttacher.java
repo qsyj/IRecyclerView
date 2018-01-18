@@ -1,10 +1,21 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 /**
  * Created by wqlin on 2017/9/3.
  */
 
 public interface ILoadMoreAttacher {
+    /**
+     * 销毁
+     */
+    void destory();
+
+    /**
+     * 有没有进行动画
+     * @return
+     */
+    boolean isAnim();
+
     /**
      * 获取IRecyclerView的Itemg个数(不包括头部 脚部)
      * @return
@@ -38,11 +49,6 @@ public interface ILoadMoreAttacher {
      * 设置是否充满屏幕(onInterceptTouchEvent() ACTION_DOWN)
      */
     void setFull();
-
-    /**
-     * 下拉刷新完成
-     */
-    void pullRefreshComplete();
 
     /**
      * 加载更多 回调监听
@@ -115,6 +121,11 @@ public interface ILoadMoreAttacher {
      * 加载更多 出现错误
      */
     void setLoadMoreError();
+
+    /**
+     * 重置
+     */
+    void setLoadMoreReset();
 
     /**
      * 滑动状态改变  OnLoadMoreScrollListener onScrolled()

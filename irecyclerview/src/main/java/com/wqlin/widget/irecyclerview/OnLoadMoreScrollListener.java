@@ -1,4 +1,4 @@
-package com.wqlin.irecyclerview;
+package com.wqlin.widget.irecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.view.View;
  * Created by aspsine on 16/3/13.
  */
 public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
-    private  Status statusLoadMore = Status.LOAD_RESET;
+    private Status statusLoadMore = Status.LOAD_RESET;
 
     private ILoadMoreAttacher mLoadMoreAttacher;
 
