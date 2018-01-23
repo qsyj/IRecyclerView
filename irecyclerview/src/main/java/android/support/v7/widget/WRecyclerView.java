@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -38,8 +37,8 @@ import com.wqlin.widget.irecyclerview.WrapperAdapter;
  * 注意销毁调用{@link #destory()}
  * Created by aspsine on 16/3/3.
  */
-public class IRecyclerView extends RecyclerView {
-    private static final String TAG = IRecyclerView.class.getSimpleName();
+public class WRecyclerView extends RecyclerView {
+    private static final String TAG = WRecyclerView.class.getSimpleName();
 
     private static final int STATUS_DEFAULT = 0;
 
@@ -92,15 +91,15 @@ public class IRecyclerView extends RecyclerView {
      */
     private final float scale = 2.5f;
 
-    public IRecyclerView(Context context) {
+    public WRecyclerView(Context context) {
         this(context, null);
     }
 
-    public IRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public WRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public IRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public WRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setStatus(STATUS_DEFAULT);
         setLoadMoreAttacher();
