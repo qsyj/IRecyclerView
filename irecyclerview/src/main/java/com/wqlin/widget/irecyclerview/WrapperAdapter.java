@@ -15,11 +15,11 @@ import android.widget.LinearLayout;
  * Created by aspsine on 16/3/12.
  */
 public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected static final int REFRESH_HEADER = Integer.MIN_VALUE;
-    protected static final int HEADER = Integer.MIN_VALUE + 1;
-    protected static final int FOOTER = Integer.MAX_VALUE - 2;
-    protected static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE-1;
-    protected static final int EMPTY_FOOTER = Integer.MAX_VALUE;
+    public static final int REFRESH_HEADER = Integer.MIN_VALUE;
+    public static final int HEADER = Integer.MIN_VALUE + 1;
+    public static final int FOOTER = Integer.MAX_VALUE - 2;
+    public static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE-1;
+    public static final int EMPTY_FOOTER = Integer.MAX_VALUE;
 
     private final RecyclerView.Adapter mAdapter;
 
@@ -413,6 +413,19 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (1 < position && position < mAdapter.getItemCount() + 2) {
             mAdapter.onBindViewHolder(holder, position - 2,null);
         }
+    }
+
+    public int getHeaderCount() {
+        return 2;
+    }
+
+    public int getFooterCount() {
+        int count = 1;
+        if (isEmptyView)
+            count++;
+        if (isLoadMoreFooterView)
+            count++;
+        return count;
     }
 
     static class RefreshHeaderContainerViewHolder extends RecyclerView.ViewHolder {

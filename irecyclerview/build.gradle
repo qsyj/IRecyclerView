@@ -31,7 +31,7 @@ dependencies {
 }
 
 
-version = "0.5.4"	//aar的版本号
+version = "0.5.7"	//aar的版本号
 ext {
 //    artifact = 'irecyclerview'
 //    bintrayRepo = 'maven'
